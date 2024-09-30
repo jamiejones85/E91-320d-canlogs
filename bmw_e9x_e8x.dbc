@@ -39,6 +39,9 @@ BU_: EON XXX RDC SZL VGSG JBBF RFK FLA RAD1 CAS CID AHM HKL HUD EKP DWA DSC SM_B
 BO_ 3221225472 VECTOR__INDEPENDENT_SIG_MSG: 0 Vector__XXX
  SG_ Counter_182 : 0|4@1+ (1,0) [0|14] "" Vector__XXX
  SG_ Checksum_182 : 0|8@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ AccOn : 0|1@1+ (1,0) [0|255] "" Vector__XXX
+ SG_ Counter_304 : 0|4@1+ (1,0) [0|15] "" Vector__XXX
+ SG_ Checksum_304 : 0|4@1+ (1,0) [0|255] "" Vector__XXX
 
 BO_ 170 AccPedal: 8 DME
  SG_ KickDownPressed : 53|1@0+ (1,0) [0|3] ""  XXX
@@ -113,10 +116,10 @@ BO_ 678 WiperSwitch: 8 SZL
  SG_ AutoWipersOn : 0|1@1+ (1,0) [0|3] ""  XXX
 
 BO_ 304 TerminalStatus: 8 CAS
- SG_ AccOn : 23|1@1+ (1,0) [0|255] ""  XXX
- SG_ IgnitionOff : 22|1@1+ (1,0) [0|3] ""  XXX
- SG_ Counter_304 : 32|4@1+ (1,0) [0|15] ""  XXX
- SG_ Checksum_304 : 36|4@1+ (1,0) [0|255] ""  XXX
+ SG_ Start_Button : 19|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ KL50_Start : 4|1@1+ (1,0) [0|1] "" Vector__XXX
+ SG_ KL15R_Radio : 0|1@1+ (1,0) [0|3] "" Vector__XXX
+ SG_ KL15_Ignition : 2|1@1+ (1,0) [0|1] ""  XXX
 
 BO_ 169 Torque2: 8 DME
  SG_ TORQ_AVL_SPAR_POS : 52|12@1- (0.5,0) [-1023.5|1023.5] "Nm"  XXX
@@ -290,6 +293,7 @@ BO_ 762 OccupancySeatBeltContact: 8 ACSM
  SG_ NEW_SIGNAL_2 : 0|8@1+ (1,0) [0|15] ""  XXX
 
 BO_ 764 ClosureStatus: 8 CAS
+ SG_ CentralLockState : 7|8@0+ (1,0) [0|255] "" Vector__XXX
  SG_ Pass_Rear_Door_Open : 14|1@0+ (1,0) [0|1] "" Vector__XXX
  SG_ Pass_Door_Open : 10|1@0+ (1,0) [0|1] "" Vector__XXX
  SG_ Boot_Open : 16|1@0+ (1,0) [0|1] "" Vector__XXX
@@ -714,7 +718,7 @@ BO_ 814 Status_climate_internal_control_: 8 IHKA
 
 BO_ 817 Programming_of_step_cruise_contr: 8 CCC
 
-BO_ 818 Driver_display_speed_range: 8 DME
+BO_ 818 Driver_display_speed_range: 2 DME
 
 BO_ 822 Display_check_control_message_ro: 8 Kombi
 
@@ -901,8 +905,28 @@ CM_ SG_ 502 TurnSignalActive "Turn signal on or transitioning";
 CM_ SG_ 502 RightTurn "Indicates right blinker or when steering returning right clears left blinker";
 CM_ SG_ 502 LeftTurn "Indicates left blinker or when steering returning left clears right blinker";
 CM_ SG_ 502 HoldActivated "Spikes down if blinker cleared with timeout or turn. Stays off if blinker cleared with stalk";
+CM_ SG_ 764 CentralLockState "0x84-Locked
+0x81-Unlocked
+
+Also in logs:
+0x10
+0x14-always after 0x84
+0x31-always after 0x81
+0x35";
+CM_ BO_ 1426 "[0]=0x40;
+[1]=0x22;
+[2]=0x00;
+[4]=0xFF;
+[5]=0xFF;
+[6]=0xFF;
+[7]=0xFF;
+ if (errorLightsParam == 0) bytes[3]=0x30;
+else if (errorLightsParam == 8) bytes[3]=0x31;";
 CM_ SG_ 790 setMe_0x3FFF "All ones";
 CM_ SG_ 790 DTC_pressed "Traction control off. Message transmitted when pressed. Few presses may be required followed by off.";
+CM_ BO_ 818 "Fires for Dash init to set max tacho
+
+data[0] = 0x8261; ";
 BA_DEF_ BO_  "SystemMessageLongSymbol" STRING ;
 BA_DEF_DEF_  "SystemMessageLongSymbol" "";
 BA_ "SystemMessageLongSymbol" BO_ 288 "Status_partial_setpoints_AFS_DSC_2";
